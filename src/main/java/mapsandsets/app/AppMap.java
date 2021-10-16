@@ -1,6 +1,7 @@
 package mapsandsets.app;
 
 import static java.lang.String.join;
+import static java.lang.System.out;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,14 +36,14 @@ public class AppMap {
     printMap(hashMap);
 
     boolean containsKey = hashMap.containsKey("new-key");
-    System.out.println("containsKey: " + containsKey);
+    out.println("containsKey: " + containsKey);
 
     boolean containsValue = hashMap.containsValue("new-key-new-key-new-key");
-    System.out.println("containsValue: " + containsValue);
+    out.println("containsValue: " + containsValue);
 
     Set<Entry<String, String>> entrySet = hashMap.entrySet();
     entrySet.forEach(entry -> {
-      System.out.println("key: " + entry.getKey() + ", value: " + entry.getValue());
+      out.println("key: " + entry.getKey() + ", value: " + entry.getValue());
       if ("new-key-new-key-new-key".equals(entry.getValue())) {
         entry.setValue("updated-key"); // changes in entrySet reflects also on map
       }
@@ -52,13 +53,62 @@ public class AppMap {
     Map<String, String> copy = new HashMap<>();
     copy.putAll(hashMap);
     boolean equals = hashMap.equals(copy);
-    System.out.println("equals: " + equals);
+    out.println("equals: " + equals);
 
     String bla = hashMap.get("bla");
-    System.out.println("bla: " + bla);
+    out.println("bla: " + bla);
+
+    String defaultValue = "defaultValue";
+    String orDefault = hashMap.getOrDefault("bla", defaultValue);
+    out.println("orDefault: " + orDefault);
+    bla = hashMap.get("bla");
+    out.println("bla: " + bla);
+
+    boolean empty = hashMap.isEmpty();
+    out.println("isEmpty: " + empty);
+
+    Set<String> keySet = hashMap.keySet();
+    keySet.forEach(out::println);
+
+    hashMap.merge("some-other-key", "other-value", (k, v) -> "xpto");
+    String someOtherKeyValue = hashMap.get("some-other-key");
+    out.println("someOtherKey: " + someOtherKeyValue);
+    hashMap.merge("some-other-key", "other-value", (k, v) -> v.toUpperCase());
+    someOtherKeyValue = hashMap.get("some-other-key");
+    out.println("someOtherKey: " + someOtherKeyValue);
+
+    String removed = hashMap.remove("some-other-key");
+    out.println("removed: " + removed);
+
+    boolean removedEntry = hashMap.remove("non-existent-key", "non-associated-key");
+    out.println("removedEntry: " + removedEntry);
+    removedEntry = hashMap.remove("non-existent-key", "pop-existept-key");
+    out.println("removedEntry: " + removedEntry);
+
+    hashMap.put("a", "a");
+    hashMap.replace("a", "aaa");
+    String valueForA = hashMap.get("a");
+    out.println("a: " + valueForA);
+    String replacedBValue = hashMap.replace("b", "bbb");
+    out.println("replacedBValue: " + replacedBValue);
+
+    boolean replaced = hashMap.replace("a", "a-a-a", "aa-aa-aa");
+    out.println("replaced: " + replaced);
+    replaced = hashMap.replace("a", "aaa", "aa-aa-aa");
+    out.println("replaced: " + replaced);
+
+    out.println();
+
+    out.println("before replaceAll");
+    hashMap.values().forEach(v -> out.println(v));
+    hashMap.replaceAll((k, v) -> {
+      return v.replaceAll("a", "x").replaceAll("y", "b").replaceAll("c", "z");
+    });
+    out.println("after replaceAll");
+    hashMap.values().forEach(v -> out.println(v));
   }
 
   private static void printMap(Map<String, String> map) {
-    map.forEach((k, v) -> System.out.println("key: " + k + ", value: " + v));
+    map.forEach((k, v) -> out.println("key: " + k + ", value: " + v));
   }
 }
